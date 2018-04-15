@@ -1,0 +1,65 @@
+from sys import argv
+import os
+
+BIT_FILE = "bit"
+ONLINE_FILE = "online"
+SYN_FILE = "syn"
+READY_SERVER_FILE = "ready_server"
+READY_CLIENT_FILE = "ready_client"
+
+def create_file(file_name):
+    if not os.path.exists(file_name):
+        _file_ = open(file_name, "w")  
+        _file_.close()
+
+def delete_file(file_name):
+    if os.path.exists(file_name):
+        os.remove(file_name)
+
+
+if __name__ == "__main__":
+
+    if argv[0]:
+        print("empty argv!")
+        exit(1)
+
+    file_name = argv[1]
+    if not os.path.exists(file_name):
+        print("file not found!")
+        exit(1)
+        
+    create_file(READY_CLIENT_FILE)
+    print("Client is ready,waiting for server.")
+    
+    while not os.path.exists(READY_SERVER_FILE):
+        pass
+    
+    print("Receive...")    
+    client_file = open(file_name, "wb")
+    bytearr = bytearray()
+    
+    while os.path.exists(ONLINE_FILE):
+        byte = 0
+        for i in range(8):
+            while os.path.exists(ONLINE_FILE) and not os.path.exists(SYN_FILE):
+                pass
+            #input("ждем в начале")
+            
+            if os.path.exists(BIT_FILE):
+                byte <<= 1
+                byte |= 1
+                #print (1)
+            else:
+                byte <<= 1
+                #print(0)
+            delete_file(SYN_FILE)
+        
+        if not os.path.exists(ONLINE_FILE):
+            break   
+        bytearr.append(byte)
+        
+    delete_file(READY_CLIENT_FILE)
+    delete_file(SYN_FILE)
+    client_file.write(bytearr)
+    client_file.close()
+    print("\nReceive is finished!")

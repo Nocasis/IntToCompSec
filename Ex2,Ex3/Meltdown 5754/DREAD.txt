@@ -1,0 +1,6 @@
+Damage Potential = 7
+Reproducibility = 10 
+Exploitability = 5
+Affected Users = 10
+Discoverability = 10
+RISK = 8.4

@@ -1,0 +1,16 @@
+private static bool IsValidSignature(string data, string signature) 
+{
+    var bytes = Encoding.ASCII.GetBytes("eCTR4rhYQVNwn78j" + data);  //Статичная соль
+    var hash = MD5.Create().ComputeHash(bytes);                      //Мд5 легко обратим
+    return BitConverter.ToString(hash) == signature;                 //True||False  
+}
+...
+if (IsValidSignature(Request["data"], Request["signature"])) //Если сможем подобрать верные, то узнаем ключ шифрования
+{
+   var decryptor = Aes.Create() 
+   { 
+     BlockSize = 128;
+     Key = Encoding.ASCII.GetBytes("YtGDn6mvAHbp5X7C");              //Один и тот же ключ для шифрования
+     IV = Encoding.ASCII.GetBytes("mHMUYSjiVxo4wp9R");
+   }.CreateDecryptor();
+}
